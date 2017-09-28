@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>拖动效果</title>
+	<style>
+		div{width:200px;height:200px;background:green;border:10px solid pink;position:absolute;
+			border-radius:10px;
+		}
+		#div1{position:absolute;left:100px;}
+		#div2{position:absolute;left:350px;}
+		#div3{position:absolute;left:600px;}
+	</style>
+</head>
+<body>
+	<script>
+		// 构造函数.原型.方法 = function(){};
+		window.onload=function(){//父项
+			var di = new fin();
+			di.inp1({id : 'div1',});
+
+		
+
+			var di2=new fin();
+			di2.inp1({
+				id : 'div2',
+			});
+
+
+			bindEvent(di,'down',function(){
+				// console.log(1)
+				document.title = 'hello';
+				di.oDiv.style.borderColor='yellow';
+				di.oDiv.style.width='400px';
+				di.oDiv.style.height='300px';
+				// alert(1)
+			});
+
+			bindEvent(di,'up',function(){
+				// document.title="鼠标离开啦1";
+				// di.oDiv.style.background=''
+				// di.oDiv.style.width='';
+				// di.oDiv.style.height='';
+			});
+
+			bindEvent(di,'move',function(){
+				// di.oDiv.style.background='purple';
+				// document.title="鼠标移动1";
+				// di.oDiv.style.background='-webkit-gradient(linear, 10% 10%, 50% 100%,from(#b8c4cb), to(#f6f6f8))'
+			})
+
+			bindEvent(di2,'down',function(){
+				// document.title='鼠标点击';
+			});
+
+			bindEvent(di2,'move',function(){
+				// document.title="鼠标离开啦";
+				// di2.oDiv.style.background='purple';
+				// di2.oDiv.style.borderRadius='100px';
+			});
+
+			bindEvent(di2,'up',function(){
+				// console.log(this)
+				// di2.oDiv.style.background='red';
+				// di2.oDiv.style.borderRadius='0px';
+
+			});
+		}
+		function fin(){
+			this.disX=null;
+			this.disY=null;
+			this.oDiv=null;
+			this.on={//默认参数  on
+			}
+		}
+		
+		fin.prototype.inp1=function(opt){//配置参数   opt
+			var This=this;
+
+			this.oDiv=document.getElementById(opt.id)
+
+			this.oDiv.onmousedown=function(ev){
+				//This.on.down(This);//
+				var ev=ev||windiw.event;
+				 This.down(ev);
+				fireEvent(This,'down');
+			};
+		}
+		fin.prototype.down=function(ev){
+			var This=this;
+			this.disX=ev.clientX-this.oDiv.offsetLeft;
+			this.disY=ev.clientY-this.oDiv.offsetTop;
+			// This.on.down;
+			document.onmousemove=function(ev){
+				fireEvent(This,'move');
+				//This.on.move(This);//
+				var ev=ev||window.event;
+				 This.move(ev);
+				
+			}
+			document.onmouseup=function(){
+				This.up();
+				// This.on.up();
+				fireEvent(This,'up')
+			};
+				
+
+		}
+		fin.prototype.move=function(ev){
+			this.oDiv.style.top=ev.clientY-this.disY+'px';
+			this.oDiv.style.left=ev.clientX-this.disX+'px';
+		}
+		fin.prototype.up=function(){
+			document.onmousemove=null;
+			document.onmouseup=null;
+			return  false;
+		}
+		
+		function fin2(id){//创建子项
+			fin.call(this,id)
+		}
+
+		// extend( fin2.prototype , fin.prototype );
+		
+
+		fin2.prototype.move=function(ev){
+			var dX=ev.clientX-this.disX;
+			var dY=ev.clientY-this.disY;
+
+			 if (dX<0) {
+			 	dX=1;
+			 }else if(dX>document.documentElement.clientWidth - this.oDiv.offsetWidth){
+			 	dY = document.documentElement.clientWidth - this.oDiv.offsetWidth;
+			 }else if(dY<0){
+			 	dY=10;
+			 }
+			 this.oDiv.style.left = dX + 'px';
+			 this.oDiv.style.top = dY + 'px';
+		}
+
+
+		function bindEvent(obj,events,fn){
+			//obj : 楼层
+			//events : 书架
+			//fn : 一本书
+			obj.listeners = obj.listeners || {};
+			obj.listeners[events] = obj.listeners[events] || [];
+			
+			obj.listeners[events].push( fn );
+			
+			if(obj.nodeType){
+				if(obj.addEventListener){
+					obj.addEventListener(events,fn,false);
+				}
+				else{
+					obj.attachEvent('on'+events,fn);
+				}
+			}
+		}
+
+		function fireEvent(obj,events){   //主动触发自定义事件
+	
+			if(obj.listeners && obj.listeners[events]){
+				for(var i=0;i<obj.listeners[events].length;i++){
+					 obj.listeners[events][i]();
+				}
+			}
+			
+		}
+	 
+
+	</script>
+
+	<div id="div1"></div>
+	<div id="div2"></div>
+
+</body>
+</html>

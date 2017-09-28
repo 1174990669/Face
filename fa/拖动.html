@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>拖动 </title>
+	<style>
+		div{background:black;width:200px;height:200px;position:absolute;top:0;left:0;}
+		#div1{left:100px;}
+		#div2{left:350px;}
+		#div3{left:650px;}
+		#div4{left:950px;}
+	</style>
+</head>
+<body>
+		<div id="div1">1</div>
+		<div id="div2" style="background:red">1</div>
+		<div id="div3" style="background:pink">1</div>
+		<div id="div4" style="background:lime">1</div>
+		<!--<div id="div5" style="background:orange">1</div>
+		<div id="div6" style="background:green">1</div>
+		<div id="div7" style="background:purple">1</div>
+		<div id="div8" style="background:green">1</div> -->
+	
+	<script>
+
+	//普通JS拖动效果
+	/*	var oDiv=document.getElementById('div1');
+		var disX=0;
+		var disY=0;
+
+		oDiv.onmousedown=function(ev){
+			var ev=ev||window.event;
+			disY=ev.clientY-oDiv.offsetTop;
+			disX=ev.clientX-oDiv.offsetLeft;
+				document.onmousemove=function(ev){
+					var ev=ev||window.event;
+					oDiv.style.left=ev.clientX-disX+'px';
+					oDiv.style.top=ev.clientY-disY+'px';
+				}
+				document.onmouseup=function(){
+					document.onmousemove=null;
+					document.onmouseup=null;
+				}
+				return false;
+		}*/
+
+		//普通方法变型
+		// 尽量不要出现函数嵌套函数
+		// 可以有全局变量
+		// 把onload中不是赋值的语句放到单独函数中
+
+	/*var oDiv=null;
+	var disX=null;
+	var  disY=null;
+	window.onload=function(){
+		oDiv=document.getElementById('div1')
+		int();
+	}
+	function int(){
+		oDiv.onmousedown=down;
+
+	}
+	function down(ev){
+		var ev=ev||window.event;
+		disY=ev.clientY-oDiv.offsetTop;
+		disX=ev.clientX-oDiv.offsetLeft;
+		document.onmousemove=move;
+		document.onmouseup=up;
+		return false;
+	}
+	function move(ev){
+		var ev=ev||window.event;
+		oDiv.style.left=ev.clientX-disX+'px';
+		oDiv.style.top=ev.clientY-disY+'px';
+	}
+	function up(){
+		document.onmousemove=null;
+		document.onmouseup=null;
+	}
+
+	var oDiv=null;
+	var disX=null;
+	var  disY=null;*/
+			
+	//面向对象拖动效果
+	//全局变量就是属性
+	// 函数就是方法
+	// Onload中创建对象
+	// 改this指向问题
+
+	window.onload=function(){
+		var one=new inp();
+		one.fon({
+			id :  'div1'
+		});
+		// one.Ti();
+
+		var one2=new inp();
+		one2.fon({
+			id: 'div2',
+			move:function(){document.title='鼠标移动'},
+			down:function(){document.title='这是鼠标点击'}
+		});
+
+		var one3=new inp();
+		one3.fon({
+			id:'div3',
+			move:function(){document.title='这是 div3'}
+		});
+
+		var one4=new inp();
+		one4.fon({
+			id:'div4',
+			up:function(){document.title='这是DIV4鼠标离开'}
+		});
+
+		/*var one5=new inp("div5");
+		one5.fon();
+
+		var one6=new inp("div6");
+		one6.fon();
+
+		var one7=new inp("div7");
+		one7.fon();
+
+		var one8=new inp("div8");
+		one8.fon();*/
+	}
+	function inp(){
+		// this.oDiv=document.getElementById(id);
+		this.oDiv=null;
+		this.disX=0;
+		this.disY=0;
+		this.Time=0;
+			this.two={//默认事件
+				move:function(){},
+				down:function(){}
+			}
+	}
+
+	inp.prototype.fon=function(ed){
+		var This = this;
+		this.oDiv=document.getElementById(ed.id);
+			extend(This.two,ed)
+		this.oDiv.onmousedown=function(ev){
+
+			This.two.down();
+			var ev = ev || window.event;
+			This.down(ev);
+			// return false;
+		};
+	}
+	inp.prototype.down=function(ev){
+		var This = this;
+			// This.two.move();
+			// This.two.down();
+		this.disX = ev.clientX - this.oDiv.offsetLeft;
+		this.disY = ev.clientY - this.oDiv.offsetTop;
+			// alert(ev.clientX);
+			// console.log(ev.clientX)
+
+			document.onmousemove = function(ev){
+			This.two.move();
+
+				var ev = ev || window.event;
+				This.move(ev);
+				// return false;
+			};
+			// console.log(ev.clientX)
+			document.onmouseup = this.up;
+			return false;
+	}
+		inp.prototype.move = function(ev){
+			this.oDiv.style.left = ev.clientX - this.disX + 'px';
+			this.oDiv.style.top = ev.clientY - this.disY + 'px';
+	};
+	inp.prototype.up=function(){
+		document.onmousemove = null;
+		document.onmouseup = null;
+			return false;
+	}
+	//定时器
+	/*inp.prototype.Ti=function(ev){
+		var This=this;
+		setInterval(function(ev){
+			This.oDiv.style.left = ev.clientX - This.disX + 'px';
+			This.oDiv.style.top = ev.clientY - This.disY + 'px';
+		},1000)
+	}
+*/
+	function extend(obj1,obj2){
+		for(var attr in obj2){
+			obj1[attr] = obj2[attr];
+			}
+		}
+	// inp.prototype.
+	// var 对象1 = new 构造函数();
+// 对象1.方法();
+// 
+// function 构造函数(){
+// 	this.属性
+// }
+
+// 构造函数.原型.方法 = function(){};
+	</script>
+</body>
+</html>

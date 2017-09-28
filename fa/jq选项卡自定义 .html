@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>选项卡自定义</title>
+	<script src="jquery-1.10.2.min.js"></script>
+	<style>
+		button{font-size:20px;color:green;}
+		#div1 div,#div2 div,#div3 div,#div4 div{width:200px;height:200px;border:1px solid gray;display:none;}
+		.active{background:orange;}
+	</style>
+
+	<script>
+		$(function(){
+		/*	$('#inp').click(function(){
+
+			})*/
+			var fon = new fin();
+			fon.init('div1',{});
+
+			var fon2 = new fin();
+			fon2.init('div2',{
+				event : 'mouseover'
+			})
+
+			var fon3 = new fin();
+			fon3.init('div3',{
+				event : 'mouseover',
+				delay : 200
+			})
+			
+			var fon4 = new fin();
+			fon4.init('div4',{});
+			fon4.nowSel(3);
+
+			$('#inp').click(function(){
+				alert( fon4.getContent() );
+				// alert(1)
+			})
+
+			$(fon4).on('beforeClick',function(){
+				console.log(fon4.getContent());
+			})
+
+			$(fon4).on('afterClick',function(){
+				console.log(fon4.getContent())
+			})
+		})
+
+		function fin(){
+			var oParent=null;
+			var aBut=null;
+			var aDiv=null;
+			var time=null;
+			this.settings={
+				event : 'click',
+				delay : 0
+			}
+		}
+		fin.prototype.init=function(oParent,opt){
+			$.extend( this.settings , opt );
+
+			this.oParent = $('#'+oParent);
+			this.aBut = this.oParent.find('button');
+			this.aDiv = this.oParent.find('div');
+			this.onl();
+		}
+		fin.prototype.onl=function(){
+			var This = this;
+			var timer = null;
+			// console.log(timer);
+			this.aBut.on(this.settings.event,function(){
+				
+				var _this = this;
+				
+				if( This.settings.event == 'mouseover' && This.settings.delay ){
+					timer = setTimeout(function(){
+						show(_this);
+					console.log(This.settings.delay)
+
+					},This.settings.delay);
+					
+				}
+				else{
+					show(this);
+				}
+			}).mouseout(function(){
+				clearTimeout(timer);
+			});
+			function show(obj){
+				
+				$(This).trigger('beforeClick');
+				
+				This.aBut.attr('class','');
+				This.aDiv.css('display','none');
+				
+				$(obj).attr('class','active');
+				
+				This.aDiv.eq( $(obj).index() ).css('display','block');
+				
+				This.time = $(obj).index();
+				
+				$(This).trigger('afterClick');
+				
+			}
+		}
+
+		fin.prototype.nowSel = function(index){
+			// alert(1)
+	
+			this.aBut.attr('class','');
+			this.aDiv.css('display','none');
+			
+			this.aBut.eq(index).attr('class','active');
+			this.aDiv.eq(index).css('display','block');
+			// console.log(index)
+			this.time = index;
+			
+			// this.iNow = index;
+};
+		
+		fin.prototype.getContent = function(){
+			
+			return this.aDiv.eq(this.time).html();
+			
+		};
+
+
+	</script>
+</head>
+<body>
+	<div id="div1">
+		<button class="active">01</button>
+		<button>02</button>
+		<button>03</button>
+		<button>04</button>
+		<div style="display:block">111</div>
+		<div>222</div>
+		<div>333</div>
+		<div>444</div>
+	</div>
+	<div id="div2">
+		<button>01</button>
+		<button class="active">02</button>
+		<button>03</button>
+		<button>04</button>
+		<div>111</div>
+		<div style="display:block">222</div>
+		<div>333</div>
+		<div>444</div>
+	</div>
+	<div id="div3">
+		<button>01</button>
+		<button>02</button>
+		<button class="active">03</button>
+		<button>04</button>
+		<div>111</div>
+		<div>222</div>
+		<div style="display:block">333</div>
+		<div>444</div>
+	</div>
+	<div id="div4">
+		<button>01</button>
+		<button>02</button>
+		<button>03</button>
+		<button class="active">04</button>
+		<div>111</div>
+		<div>222</div>
+		<div>333</div>
+		<div style="display:block">444</div>
+	</div>
+	<input type="button" value="点击"  id="inp">
+	
+</body>
+</html>

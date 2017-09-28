@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>放大镜</title>
+	<style>
+		#div1{position:relative;width:430px;height:430px;top:0;left:0;float:left;border:1px solid gray;}
+		#mark{position:absolute;width:100px;height:100px;background:green;opacity:0.5;display:none;}
+		#div2{position:relative;width:430px;height:430px;float:left;overflow:hidden;}
+		#div2 #img2{position:absolute;top:0;left:0;}
+		/*#div2 img{}*/
+	</style>
+
+	<script>
+		window.onload=function(){
+			var oDiv1=document.getElementById('div1');
+			var oMark=document.getElementById('mark');
+			var oDiv2=document.getElementById('div2');
+			var oImg=document.getElementById('img2');
+			
+
+			oDiv1.onmouseenter = function(){
+				oMark.style.display = 'block';
+				oDiv2.style.display='block'
+			}
+
+			oDiv1.onmouseleave =function(){
+				oMark.style.display = "none";
+				oDiv2.style.display='none';
+			}
+			oDiv1.onmousemove = function(){
+				var ev=ev||window.event;
+				oMark.style.left= ev.clientX-oMark.offsetWidth/2+'px';
+				oMark.style.top= ev.clientY-oMark.offsetHeight/2+'px';
+				// console.log(oMark.style.left)
+				if (oMark.offsetLeft<0) {
+					oMark.style.left=0;
+				}else if (oMark.offsetLeft>oDiv1.offsetWidth-oMark.offsetWidth) {
+					// alert(1)
+					oMark.style.left=oDiv1.offsetWidth-oMark.offsetWidth+'px';
+				}
+				if (oMark.offsetTop<0) {
+					oMark.style.top=0;
+				}else if (oMark.offsetTop>oDiv1.offsetHeight-oMark.offsetHeight) {
+					oMark.style.top=oDiv1.offsetHeight-oMark.offsetHeight+'px';
+				}
+
+				var L=oMark.offsetLeft/oDiv1.offsetWidth;
+				var T=oMark.offsetTop/oDiv1.offsetHeight;
+
+				oImg.style.left= - L*oDiv2.offsetWidth+'px';
+				oImg.style.top = - T*oDiv2.offsetHeight+'px';
+				
+			}
+
+		}
+	</script>
+</head>
+<body>
+	<div id="div1">
+		<div id="mark"></div>
+		<img src="xt.png" alt="">
+	</div>
+	<div id="div2">
+		<img src="dt.png" alt="" id="img2">
+	</div>
+</body>
+</html>

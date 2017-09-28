@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>放大镜</title>
+	<style>
+		#div1{position:relative;width: 430px;height: 430px;top:0;left:0;float: left}
+		#mark{position: absolute;top:0;left:0;width: 100px;height: 100px;background: green;opacity:0.5;}
+		#div2{width: 430px;height: 430px;position:relative;float:left;overflow: hidden}
+		#img1{position:absolute;}
+	</style>
+
+	<script>
+		window.onload=function(){
+			
+
+			var fin=new fn();
+			fin.init();
+		}
+		function fn(){
+			var oDiv1=null;
+			var oMark=null;
+			var oDiv2=null;
+		}
+		fn.prototype.init=function(){
+				var This=this;
+			this.oDiv=document.getElementById('div1');
+			this.oMark=document.getElementById('mark');
+			this.oDiv2=document.getElementById('div2');
+			// this.oDiv1();
+			this.oDiv1.onmousedown = function(){
+				oMark.style.display = 'block';
+				oDiv2.style.display='block';
+				This.leave();
+			}
+		}
+		fn.prototype.leave=function(){
+			oMark.style.display = "none";
+			oDiv2.style.display='none';
+			this.move();
+		}
+		fn.prototype.leave=function(){
+			var ev=ev||window.event;
+				oMark.style.left= ev.clientX-oMark.offsetWidth/2+'px';
+				oMark.style.top= ev.clientY-oMark.offsetHeight/2+'px';
+				// console.log(oMark.style.left)
+				if (oMark.offsetLeft<0) {
+					oMark.style.left=0;
+				}else if (oMark.offsetLeft>oDiv1.offsetWidth-oMark.offsetWidth) {
+					// alert(1)
+					oMark.style.left=oDiv1.offsetWidth-oMark.offsetWidth+'px';
+				}
+				if (oMark.offsetTop<0) {
+					oMark.style.top=0;
+				}else if (oMark.offsetTop>oDiv1.offsetHeight-oMark.offsetHeight) {
+					oMark.style.top=oDiv1.offsetHeight-oMark.offsetHeight+'px';
+				}
+
+				var L=oMark.offsetLeft/oDiv1.offsetWidth;
+				var T=oMark.offsetTop/oDiv1.offsetHeight;
+
+				oImg.style.left= - L*oDiv2.offsetWidth+'px';
+				oImg.style.top = - T*oDiv2.offsetHeight+'px';
+				
+		}
+
+
+	</script>
+</head>
+<body>
+	<div id="div1">
+		<div id="mark"></div>
+		<img src="img/xt.png" alt="">
+	</div>
+	<div id="div2">
+		<img src="img/dt.png" alt="" id="img1">
+	</div>
+</body>
+</html>

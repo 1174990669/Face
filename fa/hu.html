@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>面向对象</title>
+		<style>
+			/*li{width:}*/
+			div:nth-of-type(1){background:lime}
+			div:nth-of-type(2){background:orange}
+			div:nth-of-type(3){background:purple}
+			div:nth-of-type(4){background:black}
+			div{width:200px;height:200px;display:none;}
+			.active{background:red}
+		</style>
+</head>
+<body>
+
+	<script>
+		// window.onload=function(){
+		// 	var aBut=document.getElementsByTagName('button');
+		// 	var aDiv=document.getElementsByTagName('div');
+		// 	for (var i = 0; i < aBut.length; i++) {
+		// 		aBut[i].index=i;
+		// 		aBut[i].onclick=function(){
+		// 			for (var j = 0; j < aDiv.length; j++) {
+		// 				aDiv[j].index=j;
+		// 				aDiv[j].style.display="none";
+		// 				aDiv[this.index].style.display="block"
+		// 			}
+		// 		}
+		// 	}
+		// }
+		// var aBut=null;
+		// var aDiv=null;
+		// window.onload=function(){
+		// 	aBut=document.getElementsByTagName('button');
+		// 	aDiv=document.getElementsByTagName('div');
+		// 	aa();
+		// }
+		// 	function aa(){
+		// 		for (var i = 0; i < aBut.length; i++) {
+		// 		aBut[i].index=i;
+		// 		aBut[i].onclick=input2;
+		// 	}
+		// 	function input2(){
+		// 		for (var i= 0; i < aDiv.length; i++) {
+		// 				aDiv[i].style.display="none";
+		// 			}
+		// 			aDiv[this.index].style.display="block";
+		// 	}
+		// }
+
+		window.onload=function(){
+			var oB= new but('nav1');
+			 oB.inbut();
+			 oB.Ti();
+
+			 var oB1= new but('nav2');
+			 oB1.inbut();
+			 // oB1.Ti();
+
+			 var oB2= new but('nav3');
+			 oB2.inbut();
+			 oB2.Ti();
+
+			 var oB3= new but('nav4');
+			 oB3.inbut();
+		}
+		function but(id){
+			this.oParent = document.getElementById(id);
+			this.aBut = this.oParent.getElementsByTagName('button');
+			this.aDiv = this.oParent.getElementsByTagName('div');
+			this.Time=0;
+		}
+		but.prototype.inbut=function(){
+			var Th=this
+			for (var i = 0; i < this.aBut.length; i++) {
+				this.aBut[i].index=i;
+				this.aBut[i].onclick=function(){
+					Th.inbut2(this)
+				};
+			}
+			but.prototype.inbut2=function(nav){
+				for (var i= 0; i < this.aDiv.length; i++) {
+						this.aBut[i].className='';
+						this.aDiv[i].style.display="none";
+					}
+					nav.className='active';
+					this.aDiv[nav.index].style.display="block";
+						
+			}
+		}
+		but.prototype.Ti=function(){
+			var  This=this;
+			setInterval(function(){
+				if(This.Time == This.aBut.length-1){
+				This.Time = 0;
+				// alert(1)
+				}else{
+					This.Time++;
+					}
+				for (var i= 0; i < This.aBut.length; i++) {
+						This.aDiv[i].style.display="none";
+						This.aBut[i].className='';
+					}
+					This.aBut[This.Time].className='active';
+						This.aDiv[This.Time].style.display="block";
+						
+			},1000)
+		}
+	</script>
+
+	<nav id="nav1">
+		<button>1</button>
+		<button>2</button>
+		<button>3</button><br/>
+		<div style="display:inline-block">01</div>
+		<div>02</div>
+		<div>03</div>
+	</nav>
+
+	<nav id="nav2">
+		<button>1</button>
+		<button>2</button>
+		<button>3</button><br/>
+		<div style="display:inline-block">01</div>
+		<div>02</div>
+		<div>03</div>
+	</nav>
+	<nav id="nav3">
+		<button>1</button>
+		<button>2</button>
+		<button>3</button>
+		<button>4</button><br/>
+		<div style="display:inline-block">01</div>
+		<div>02</div>
+		<div>03</div>
+		<div>04</div>
+	</nav>
+	<nav id="nav4">
+		<button>1</button>
+		<button>2</button><br/>
+		<div style="display:inline-block">01</div>
+		<div>02</div>
+	</nav>
+</body>
+</html>

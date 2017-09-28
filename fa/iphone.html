@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>苹果</title>
+	<style>
+		body{text-align: center;}
+		div{position:fixed;bottom:0;text-align: center;width: 100%;}
+		img{width:60px; display: inline-block;padding:10px;}
+	</style>
+
+	<script>
+		window.onload=function(){
+			var a =0;
+			var b =0;
+			var c =0;
+			var oDiv=document.getElementById('div1')
+			var aInput = document.getElementsByTagName('input');
+			var aImg   = document.getElementsByTagName('img');
+
+			document.onmousemove = function(ev){
+				for (var i = 0; i < aInput.length; i++) {
+					var ev=ev||window.event;
+
+				    // aInput[i].value =aImg[i].offsetLeft+aImg[i].offsetWidth/2+'px';
+				    // aInput[i].value = ev.clientX-aImg[i].offsetWidth;
+				    a=ev.clientX-aImg[i].offsetLeft-aImg[i].offsetWidth/2;
+				    b=oDiv.offsetTop-ev.clientY+oDiv.offsetHeight/2;
+				    aInput[i].value='x轴'+a+'y轴'+b;
+					// console.log(aImg[i].style.left)
+
+					c =  Math.sqrt(a*a+b*b);//开方
+					var Ms=1-c/250;
+					if (Ms<0.4) {
+						Ms=0.4
+					}
+						// console.log(Ms)
+
+					aImg[i].style.width = Ms*150+'px';
+
+				}
+				
+
+				// ev.clientY-oDiv.offsetLeft;
+			}
+		}
+	</script>
+</head>
+<body>
+	<input type="text" value="1">
+	<input type="text" value="1">
+	<input type="text" value="1">
+	<input type="text" value="1">
+	<input type="text" value="1">
+	<div id="div1">
+		<img src="img/1.png" alt="">
+		<img src="img/2.png" alt="">
+		<img src="img/3.png" alt="">
+		<img src="img/4.png" alt="">
+		<img src="img/5.png" alt="">
+	</div>
+</body>
+</html>

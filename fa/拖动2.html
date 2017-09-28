@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>拖动效果</title>
+	<style>
+		div{width:200px;height:200px;background:green;border:10px solid pink;position:absolute;
+			border-radius:10px;
+		}
+		#div1{position:absolute;left:100px;}
+		#div2{position:absolute;left:350px;}
+		#div3{position:absolute;left:600px;}
+		/*#div1{}*/
+	</style>
+</head>
+<body>
+	<script>
+		/*window.onload=function(){
+			var oDiv=document.getElementById('div1');
+			var disX=0;
+			var disY=0;
+
+			oDiv.onmousedown=function(ev){
+				var ev=ev||window.event;
+				// disX=ev.clientX;
+				// disY=ev.clientY;
+				disX=ev.clientX-oDiv.offsetLeft;
+				disY=ev.clientY-oDiv.offsetTop;
+				// alert("X coords: " + disX + ", Y coords: " + disY)
+
+					document.onmousemove=function(ev){
+						var ev=ev||window.event;
+						oDiv.style.left=ev.clientX-disX+'px';
+						oDiv.style.top=ev.clientY-disY+'px';
+					}
+
+						document.onmouseup=function(){
+							document.onmousemove=null;
+							document.onmouseup=null;
+						}
+						return false;
+			}
+		}*/
+
+		// window.onload=function(){
+		// 	var oDiv=document.getElementById('div1');
+		// 	var disX=0;
+		// 	var disY=0;
+		// 	oDiv.onmousedown=function(ev){
+		// 		var ev=ev||window.event;
+		// 		disX=ev.clientX-oDiv.offsetLeft;
+		// 		disY=ev.clientY-oDiv.offsetTop;
+
+		// 		document.onmousemove=function(ev){
+		// 			var ev=ev||window.event;
+		// 			oDiv.style.left=ev.clientX-disX+'px';
+		// 			oDiv.style.top=ev.clientY-disY+'px';
+		// 		}
+		// 		document.onmouseup=function(){
+		// 			document.onmousemove=null;
+		// 			document.onmouseup=null;
+		// 		}
+		// 	}
+		// 	return false;
+		// }
+
+
+		//普通方法变型
+		// 尽量不要出现函数嵌套函数
+		// 可以有全局变量
+		// 把onload中不是赋值的语句放到单独函数中
+
+		// var oDiv=document.getElementById('div1');
+		/*	var oDiv=null;
+			var disX=null;
+			var disY=null;
+		window.onload=function(){
+			oDiv=document.getElementById('div1');
+			inp();
+		}
+		function inp(){
+			oDiv.onmousedown=down;
+		}
+		function down(ev){
+			var ev=ev||window.event;
+			disX=ev.clientX-oDiv.offsetLeft;
+			disY=ev.clientY-oDiv.offsetTop;
+			document.onmousemove=move;
+			document.onmouseup=up;
+		}
+		function  move(ev){
+			var ev=ev||window.event;
+			oDiv.style.left=ev.clientX-disX+'px';
+			oDiv.style.top=ev.clientY-disY+'px';
+		}
+		function up(){
+			document.onmousemove=null;
+			document.onmouseup=null;
+		}*/
+		//面向对象拖动效果
+		//全局变量就是属性
+		// 函数就是方法
+		// Onload中创建对象
+		// 改this指向问题
+
+		// var 对象1 = new 构造函数();
+		// 对象1.方法();
+		// 
+		// function 构造函数(){
+		// 	this.属性
+		// }
+
+		// 构造函数.原型.方法 = function(){};
+		window.onload=function(){//父项
+			var di = new fin();
+			di.inp1({
+				id : 'div1',
+				down:function(This){This.oDiv.style.borderColor='yellow'}
+			});
+
+			var di2=new fin2();
+			di2.inp1({
+				id : 'div2',
+				down:function(){document.title='鼠标点击'},
+				move:function(This){This.oDiv.style.background='transparent'},
+				up:function(){document.title="鼠标离开啦"}
+			});
+			/*var di3=new fin3();
+			di3.inp1({
+				id :  'div3',
+				move:function(){document.title='鼠标移动2'}，
+				up:function(){document.title="鼠标离开啦"}
+			});*/
+
+			// var di4=new fin('div4');
+			// di4.inp1();
+
+		}
+		function fin(){
+			this.disX=null;
+			this.disY=null;
+			this.oDiv=null;
+			this.on={//默认参数  on
+				down:function(){},
+				up:function(){},
+				move:function(){}
+			}
+		}
+		
+		fin.prototype.inp1=function(opt){//配置参数   opt
+			var This=this;
+			this.oDiv=document.getElementById(opt.id)
+			extend( this.on , opt );//拷贝 继承
+
+			this.oDiv.onmousedown=function(ev){
+				This.on.down(This);//
+				var ev=ev||windiw.event;
+				This.down(ev);
+			};
+		}
+		fin.prototype.down=function(ev){
+			var This=this;
+			this.disX=ev.clientX-this.oDiv.offsetLeft;
+			this.disY=ev.clientY-this.oDiv.offsetTop;
+			// This.on.down;
+			document.onmousemove=function(ev){
+				This.on.move(This);//
+				var ev=ev||window.event;
+				This.move(ev);
+			}
+			document.onmouseup=function(){
+				This.up();
+				This.on.up();
+			};
+				
+
+		}
+		fin.prototype.move=function(ev){
+			this.oDiv.style.top=ev.clientY-this.disY+'px';
+			this.oDiv.style.left=ev.clientX-this.disX+'px';
+		}
+		fin.prototype.up=function(){
+			document.onmousemove=null;
+			document.onmouseup=null;
+			return  false;
+		}
+		
+		function fin2(id){//创建子项
+			fin.call(this,id)
+		}
+
+		// fin2.prototype=fin.prototype;
+		extend( fin2.prototype , fin.prototype );
+		
+
+		fin2.prototype.move=function(ev){
+			var dX=ev.clientX-this.disX;
+			var dY=ev.clientY-this.disY;
+
+			 if (dX<0) {
+			 	dX=1;
+			 }else if(dX>document.documentElement.clientWidth - this.oDiv.offsetWidth){
+			 	dY = document.documentElement.clientWidth - this.oDiv.offsetWidth;
+			 }else if(dY<0){
+			 	dY=10;
+			 }
+			 this.oDiv.style.left = dX + 'px';
+			 this.oDiv.style.top = dY + 'px';
+		}
+
+		function extend(obj1,obj2){
+		for(var attr in obj2){
+			obj1[attr] = obj2[attr];
+			}
+		}
+	/*	function fin3(id){//创建子项
+			fin.call(this,id);
+		}
+		extend(fin3.prototype,fin.prototype)
+
+		fin3.prototype.move=function(ev){
+			var xX=ev.clientX-this.disX;
+			var yY=ev.clientY-this.disY;
+
+		}*/
+
+		/*for (attr in fin2.prototype) {
+			fin.prototype[attr]=fin2.prototype[attr];
+		}*/
+	 
+
+	</script>
+
+	<div id="div1"></div>
+	<div id="div2"></div>
+	<!-- <div id="div3"></div> -->
+	<!-- <div id="div4">div4</div> -->
+</body>
+</html>
